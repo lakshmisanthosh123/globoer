@@ -2,14 +2,14 @@
 
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
+import Image from "next/image";
 const Wrapper = styled(Box)({
   width: 250,
   padding: 20,
 });
 const cards = [
   {
-    imgSrc: "/mnt/data/97e594df-7a2c-4358-8ed1-d31b442e3008.png", // replace with actual image path
+    imgSrc: "/images/img1.jpg",
     title: "International Guideline",
     description:
       "COVID safety measures adopted by various countries including VISA restrictions, quarantine rules, etc.",
@@ -17,7 +17,16 @@ const cards = [
     buttonLink: "#",
   },
   {
-    imgSrc: "/mnt/data/sale.png", // replace with your SALE image path
+    imgSrc: "/images/img2.jpg",
+    title: "We’ve found you a great deal!",
+    description:
+      "Get more, spend less with up to $575 off when you book your flight + stay together.",
+    buttonText: "Shop flight",
+    buttonLink: "#",
+  },
+
+  {
+    imgSrc: "/images/img3.jpg",
     title: "We’ve found you a great deal!",
     description:
       "Get more, spend less with up to $575 off when you book your flight + stay together.",
@@ -35,6 +44,12 @@ export default function RightSidebar() {
             key={idx}
             className="border rounded-lg shadow-sm overflow-hidden"
           >
+            <Image
+              src={card.imgSrc}
+              alt={card.title}
+              width={300}
+              height={180}
+            />
             <div className="p-4">
               <h3 className="text-lg font-semibold mb-2">{card.title}</h3>
               <p className="text-sm text-gray-600 mb-4">{card.description}</p>

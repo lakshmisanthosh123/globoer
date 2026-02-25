@@ -7,6 +7,7 @@ import FiltersSidebar from "@/components/FiltersSidebar";
 import FlightsList from "@/components/FlightsList";
 import RightSidebar from "@/components/RightSidebar";
 import SearchBar from "@/components/SearchBar";
+import Footer from "@/components/Footer";
 import { FlightSearch, FlightFilters } from "@/data/flights";
 export default function Home() {
   const [filters, setFilters] = useState<FlightFilters>({
@@ -33,16 +34,31 @@ export default function Home() {
   return (
     <>
       <Header />
-      <SearchBar search={searchData || undefined} onSearch={handleSearch} />
-      <Box display="flex" gap={3} p={4}>
-        <FiltersSidebar filters={filters} onFilterChange={setFilters} />
 
-        <Box flex={1}>
-          <FlightsList filters={filters} search={searchData} />
+      <SearchBar search={searchData} onSearch={handleSearch} />
+
+      <Box
+        sx={{
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "32px 24px",
+        }}
+      >
+        <Box display="flex" alignItems="flex-start" gap={3}>
+          <Box sx={{ width: 300, flexShrink: 0 }}>
+            <FiltersSidebar filters={filters} onFilterChange={setFilters} />
+          </Box>
+
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <FlightsList filters={filters} search={searchData} />
+          </Box>
+
+          <Box sx={{ width: 300, flexShrink: 0 }}>
+            <RightSidebar />
+          </Box>
         </Box>
-
-        <RightSidebar />
       </Box>
+      <Footer />
     </>
   );
 }

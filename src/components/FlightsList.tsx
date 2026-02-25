@@ -3,6 +3,7 @@ import { useState } from "react";
 import { flights, FlightSearch, FlightFilters } from "@/data/flights";
 import FlightCard from "./FlightCard";
 import { Box, Button, ButtonGroup } from "@mui/material";
+
 export default function FlightsList({
   filters,
   search,
@@ -14,7 +15,9 @@ export default function FlightsList({
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
   };
+
   console.log(filters, search);
+
   const filteredFlights = flights.filter((flight) => {
     const fromMatch =
       !search?.from ||
@@ -68,9 +71,34 @@ export default function FlightsList({
       arrivalMatch
     );
   });
+
   const [sortBy, setSortBy] = useState<"recommended" | "fastest" | "cheapest">(
     "recommended",
   );
+
+  const sortedFlights = filteredFlights.sort((a, b) => {
+    if (sortBy === "fastest") {
+      const aMin = timeToMinutes(
+        a.duration.replace("h ", ":").replace("m", ""),
+      );
+      const bMin = timeToMinutes(
+        b.duration.replace("h ", ":").replace("m", ""),
+      );
+      return aMin - bMin;
+    }
+
+    if (sortBy === "cheapest") {
+      return a.price - b.price;
+    }
+
+    // Recommended = price + duration
+    const aTotal =
+      a.price + timeToMinutes(a.duration.replace("h ", ":").replace("m", ""));
+    const bTotal =
+      b.price + timeToMinutes(b.duration.replace("h ", ":").replace("m", ""));
+    return aTotal - bTotal;
+  });
+
   return (
     <Box display="flex" flexDirection="column" gap={3}>
       <ButtonGroup
@@ -103,7 +131,8 @@ export default function FlightsList({
           Cheapest
         </Button>
       </ButtonGroup>
-      {filteredFlights.map((flight) => (
+
+      {sortedFlights.map((flight) => (
         <FlightCard key={flight.id} flight={flight} />
       ))}
     </Box>

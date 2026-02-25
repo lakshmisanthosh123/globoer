@@ -40,7 +40,7 @@ export const flights: Flight[] = [
     to: "Mombasa",
     departure: "10:30",
     arrival: "12:40",
-    duration: "2h 10m",
+    duration: "10m",
     price: 15400,
     refundable: false,
     stops: 1,

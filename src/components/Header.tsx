@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 
 const HeaderWrapper = styled(Box)({
   display: "flex",
-  justifyContent: "space-between",
+  justifyContent: "center",
   padding: "20px 40px",
   borderBottom: "1px solid #eee",
 });
@@ -13,7 +13,12 @@ const HeaderWrapper = styled(Box)({
 export default function Header() {
   return (
     <HeaderWrapper>
-      <Typography variant="h6" fontWeight={700}>
+      <Typography
+        textAlign="center"
+        align="center"
+        variant="h6"
+        fontWeight={700}
+      >
         GloboGoer
       </Typography>
     </HeaderWrapper>

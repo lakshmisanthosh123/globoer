@@ -83,18 +83,26 @@ export default function SearchBar({ onSearch }: Props) {
   const airline = Array.from(new Set(flights.map((f) => f.airline)));
   return (
     <Wrapper>
-      <TopRow>
+      {/* TOP ROW */}
+      <TopRow
+        sx={{
+          display: "flex",
+          gap: 2,
+          mb: 2,
+          alignItems: "center",
+        }}
+      >
         <Select
           value={airlines}
           onChange={(e) => setSelectedAirline(e.target.value)}
           size="small"
-          sx={{ minWidth: 140 }}
+          sx={{ minWidth: 160, height: 40 }}
         >
-          <MenuItem value="">All Airlines</MenuItem>
+          <MenuItem value="ALL">All Airlines</MenuItem>
 
-          {airline.map((airline) => (
-            <MenuItem key={airline} value={airline}>
-              {airline}
+          {airline.map((item) => (
+            <MenuItem key={item} value={item}>
+              {item}
             </MenuItem>
           ))}
         </Select>
@@ -103,9 +111,9 @@ export default function SearchBar({ onSearch }: Props) {
           value={flightClass}
           onChange={(e) => setFlightClass(e.target.value)}
           size="small"
-          sx={{ minWidth: 140 }}
+          sx={{ minWidth: 160, height: 40 }}
         >
-          <MenuItem value="ALL">ALL</MenuItem>
+          <MenuItem value="ALL">All Classes</MenuItem>
           <MenuItem value="Economy">Economy</MenuItem>
           <MenuItem value="Business">Business</MenuItem>
         </Select>
@@ -114,21 +122,30 @@ export default function SearchBar({ onSearch }: Props) {
           value={tripType}
           onChange={(e) => setTripType(e.target.value)}
           size="small"
-          sx={{ minWidth: 140 }}
+          sx={{ minWidth: 160, height: 40 }}
         >
-          <MenuItem value="ALL">ALL</MenuItem>
+          <MenuItem value="ALL">All Trips</MenuItem>
           <MenuItem value="oneway">One Way</MenuItem>
           <MenuItem value="round">Round Trip</MenuItem>
         </Select>
       </TopRow>
 
+      {/* BOTTOM ROW */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <BottomRow>
+        <BottomRow
+          sx={{
+            display: "flex",
+            gap: 2,
+            alignItems: "center",
+          }}
+        >
           <TextField
             placeholder="From"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
+            sx={{ flex: 1 }}
             InputProps={{
+              sx: { height: 40 },
               startAdornment: (
                 <InputAdornment position="start">
                   <FlightTakeoffIcon fontSize="small" />
@@ -137,7 +154,19 @@ export default function SearchBar({ onSearch }: Props) {
             }}
           />
 
-          <SwapBox onClick={handleSwap}>
+          <SwapBox
+            onClick={handleSwap}
+            sx={{
+              height: 40,
+              width: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              border: "1px solid #ddd",
+              borderRadius: 1,
+              cursor: "pointer",
+            }}
+          >
             <SwapHorizIcon color="primary" />
           </SwapBox>
 
@@ -145,7 +174,9 @@ export default function SearchBar({ onSearch }: Props) {
             placeholder="To"
             value={to}
             onChange={(e) => setTo(e.target.value)}
+            sx={{ flex: 1 }}
             InputProps={{
+              sx: { height: 40 },
               startAdornment: (
                 <InputAdornment position="start">
                   <FlightLandIcon fontSize="small" />
@@ -159,21 +190,26 @@ export default function SearchBar({ onSearch }: Props) {
             label="Travellers"
             value={travellers}
             onChange={(e) => setTravellers(Number(e.target.value))}
+            sx={{ width: 140 }}
             InputProps={{
+              sx: { height: 40 },
               startAdornment: (
                 <InputAdornment position="start">
                   <PersonIcon fontSize="small" />
                 </InputAdornment>
               ),
             }}
-            sx={{ width: 120 }}
           />
 
           <Button
             variant="contained"
             startIcon={<SearchIcon />}
-            sx={{ height: 56 }}
             onClick={handleSearch}
+            sx={{
+              height: 40,
+              px: 4,
+              whiteSpace: "nowrap",
+            }}
           >
             Search
           </Button>

@@ -93,7 +93,6 @@ export default function FiltersSidebar({ filters, onFilterChange }: Props) {
 
       <Divider sx={{ mb: 2 }} />
 
-      {/* Stops */}
       <Typography fontWeight={600}>Stops</Typography>
       <FormControlLabel
         control={
@@ -116,7 +115,6 @@ export default function FiltersSidebar({ filters, onFilterChange }: Props) {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Airlines */}
       <Typography fontWeight={600}>Airlines</Typography>
       {airlines.map((airline) => (
         <FormControlLabel
@@ -133,7 +131,6 @@ export default function FiltersSidebar({ filters, onFilterChange }: Props) {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Departure Time */}
       <Typography fontWeight={600}>Departure Time</Typography>
       <Typography variant="body2" sx={{ mb: 1 }}>
         {formatTime(localFilters.departureTimeRange[0])} -{" "}
@@ -149,7 +146,6 @@ export default function FiltersSidebar({ filters, onFilterChange }: Props) {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Arrival Time */}
       <Typography fontWeight={600}>Arrival Time</Typography>
       <Typography variant="body2" sx={{ mb: 1 }}>
         {formatTime(localFilters.arrivalTimeRange[0])} -{" "}
@@ -165,10 +161,9 @@ export default function FiltersSidebar({ filters, onFilterChange }: Props) {
 
       <Divider sx={{ my: 3 }} />
 
-      {/* Buttons */}
-      <Stack direction="column" spacing={1}>
+      <Stack direction="row" spacing={2}>
         <Button variant="contained" fullWidth onClick={handleApply}>
-          Apply Filters
+          Filter
         </Button>
 
         <Button variant="outlined" fullWidth onClick={handleReset}>
