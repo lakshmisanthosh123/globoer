@@ -56,7 +56,7 @@ const SwapBox = styled(Box)({
 export default function SearchBar({ onSearch }: Props) {
   const [tripType, setTripType] = useState("ALL");
   const [flightClass, setFlightClass] = useState("ALL");
-  const [airlines, setSelectedAirline] = useState("All Airlines");
+  const [airlines, setSelectedAirline] = useState("ALL");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [departure, setDeparture] = useState<Dayjs | null>(dayjs());
@@ -83,7 +83,6 @@ export default function SearchBar({ onSearch }: Props) {
   const airline = Array.from(new Set(flights.map((f) => f.airline)));
   return (
     <Wrapper>
-      {/* TOP ROW */}
       <TopRow
         sx={{
           display: "flex",
