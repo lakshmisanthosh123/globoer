@@ -10,7 +10,9 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
+import FlightLandIcon from "@mui/icons-material/FlightLand";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -174,6 +176,14 @@ export default function SearchBar({ onSearch }: Props) {
             value={to}
             onChange={(e) => setTo(e.target.value)}
             sx={{ flex: 1 }}
+            InputProps={{
+              sx: { height: 40 },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FlightLandIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
           />
 
           <TextField
@@ -182,6 +192,14 @@ export default function SearchBar({ onSearch }: Props) {
             value={travellers}
             onChange={(e) => setTravellers(Number(e.target.value))}
             sx={{ width: 140 }}
+            InputProps={{
+              sx: { height: 40 },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
           />
 
           <Button
