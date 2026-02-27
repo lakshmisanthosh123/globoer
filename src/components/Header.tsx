@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const HeaderWrapper = styled(Box)({

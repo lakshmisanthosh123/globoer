@@ -66,6 +66,8 @@ export default function SearchBar({ onSearch }: Props) {
   const handleSwap = () => {
     setFrom(to);
     setTo(from);
+    setDeparture(null);
+    setReturnDate(null);
   };
 
   const handleSearch = () => {

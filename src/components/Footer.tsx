@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Typography, IconButton } from "@mui/material";
+import { Box, Typography} from "@mui/material";
 
 export default function Footer() {
   return (

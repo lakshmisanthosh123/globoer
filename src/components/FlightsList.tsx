@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import { useMemo, useState } from "react";
 import { flights, FlightSearch, FlightFilters } from "@/data/flights";
 import FlightCard from "./FlightCard";
 import { Box, Button, ButtonGroup } from "@mui/material";
@@ -11,93 +12,98 @@ export default function FlightsList({
   filters: FlightFilters;
   search?: FlightSearch;
 }) {
+  const [sortBy, setSortBy] = useState<
+    "recommended" | "fastest" | "cheapest"
+  >();
+
   const timeToMinutes = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
   };
 
-  console.log(filters, search);
+  const parseDuration = (duration: string) => {
+    const match = duration.match(/(\d+)h\s*(\d+)m/);
+    if (!match) return 0;
+    return Number(match[1]) * 60 + Number(match[2]);
+  };
 
-  const filteredFlights = flights.filter((flight) => {
-    const fromMatch =
-      !search?.from ||
-      flight.from.toLowerCase().includes(search.from.toLowerCase());
+  const processedFlights = useMemo(() => {
+    let result = [...flights];
 
-    const toMatch =
-      !search?.to || flight.to.toLowerCase().includes(search.to.toLowerCase());
+    if (search) {
+      result = result.filter((flight) => {
+        const fromMatch =
+          !search.from ||
+          flight.from.toLowerCase().includes(search.from.toLowerCase());
 
-    const triptypeMatch =
-      !search?.tripType ||
-      search.tripType === "ALL" ||
-      search.tripType === flight.tripType;
+        const toMatch =
+          !search.to ||
+          flight.to.toLowerCase().includes(search.to.toLowerCase());
 
-    const airlineSearchMatch =
-      !search?.airlines ||
-      search.airlines === "All Airlines" ||
-      flight.airline === search.airlines;
+        const tripTypeMatch =
+          !search.tripType ||
+          search.tripType === "ALL" ||
+          search.tripType === flight.tripType;
 
-    const classMatch =
-      !search?.flightClass ||
-      search.flightClass === "ALL" ||
-      search.flightClass === flight.flightClass;
+        const airlineMatch =
+          !search.airlines ||
+          search.airlines === "ALL" ||
+          search.airlines === flight.airline;
 
-    const stopsMatch =
-      filters.stops.length === 0 || filters.stops.includes(flight.stops);
+        const classMatch =
+          !search.flightClass ||
+          search.flightClass === "ALL" ||
+          search.flightClass === flight.flightClass;
 
-    const airlineMatch =
-      filters.airlines.length === 0 ||
-      filters.airlines.includes(flight.airline);
-
-    const departureMinutes = timeToMinutes(flight.departure);
-    const arrivalMinutes = timeToMinutes(flight.arrival);
-
-    const departureMatch =
-      departureMinutes >= filters.departureTimeRange[0] &&
-      departureMinutes <= filters.departureTimeRange[1];
-
-    const arrivalMatch =
-      arrivalMinutes >= filters.arrivalTimeRange[0] &&
-      arrivalMinutes <= filters.arrivalTimeRange[1];
-
-    return (
-      fromMatch &&
-      toMatch &&
-      triptypeMatch &&
-      airlineSearchMatch &&
-      classMatch &&
-      stopsMatch &&
-      airlineMatch &&
-      departureMatch &&
-      arrivalMatch
-    );
-  });
-
-  const [sortBy, setSortBy] = useState<"recommended" | "fastest" | "cheapest">(
-    "recommended",
-  );
-
-  const sortedFlights = filteredFlights.sort((a, b) => {
-    if (sortBy === "fastest") {
-      const aMin = timeToMinutes(
-        a.duration.replace("h ", ":").replace("m", ""),
-      );
-      const bMin = timeToMinutes(
-        b.duration.replace("h ", ":").replace("m", ""),
-      );
-      return aMin - bMin;
+        return (
+          fromMatch && toMatch && tripTypeMatch && airlineMatch && classMatch
+        );
+      });
     }
 
-    if (sortBy === "cheapest") {
-      return a.price - b.price;
+    if (filters) {
+      result = result.filter((flight) => {
+        const stopsMatch =
+          filters.stops.length === 0 || filters.stops.includes(flight.stops);
+
+        const airlineFilterMatch =
+          filters.airlines.length === 0 ||
+          filters.airlines.includes(flight.airline);
+
+        const departureMinutes = timeToMinutes(flight.departure);
+        const arrivalMinutes = timeToMinutes(flight.arrival);
+
+        const departureMatch =
+          departureMinutes >= filters.departureTimeRange[0] &&
+          departureMinutes <= filters.departureTimeRange[1];
+
+        const arrivalMatch =
+          arrivalMinutes >= filters.arrivalTimeRange[0] &&
+          arrivalMinutes <= filters.arrivalTimeRange[1];
+
+        return (
+          stopsMatch && airlineFilterMatch && departureMatch && arrivalMatch
+        );
+      });
     }
 
-    // Recommended = price + duration
-    const aTotal =
-      a.price + timeToMinutes(a.duration.replace("h ", ":").replace("m", ""));
-    const bTotal =
-      b.price + timeToMinutes(b.duration.replace("h ", ":").replace("m", ""));
-    return aTotal - bTotal;
-  });
+    result.sort((a, b) => {
+      if (sortBy === "fastest") {
+        return parseDuration(a.duration) - parseDuration(b.duration);
+      }
+
+      if (sortBy === "cheapest") {
+        return a.price - b.price;
+      }
+
+      const aScore = a.price + parseDuration(a.duration);
+      const bScore = b.price + parseDuration(b.duration);
+
+      return aScore - bScore;
+    });
+
+    return result;
+  }, [filters, search, sortBy]);
 
   return (
     <Box display="flex" flexDirection="column" gap={3}>
@@ -132,9 +138,15 @@ export default function FlightsList({
         </Button>
       </ButtonGroup>
 
-      {sortedFlights.map((flight) => (
-        <FlightCard key={flight.id} flight={flight} />
-      ))}
+      {processedFlights.length === 0 ? (
+        <Box textAlign="center" py={4}>
+          No flights found
+        </Box>
+      ) : (
+        processedFlights.map((flight) => (
+          <FlightCard key={flight.id} flight={flight} />
+        ))
+      )}
     </Box>
   );
 }
