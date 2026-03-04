@@ -82,6 +82,18 @@ export default function SearchBar({ onSearch }: Props) {
       airlines,
     });
   };
+  const handleResetSearch = () => {
+    onSearch({
+      from,
+      to,
+      departure: departure ? departure.format("YYYY-MM-DD") : null,
+      returnDate: returnDate ? returnDate.format("YYYY-MM-DD") : null,
+      travellers,
+      tripType,
+      flightClass,
+      airlines,
+    });
+  };
   const airline = Array.from(new Set(flights.map((f) => f.airline)));
   return (
     <Wrapper>
@@ -213,6 +225,17 @@ export default function SearchBar({ onSearch }: Props) {
             }}
           >
             Search
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleResetSearch}
+            sx={{
+              height: 40,
+              px: 4,
+              whiteSpace: "nowrap",
+            }}
+          >
+            RESET
           </Button>
         </BottomRow>
       </LocalizationProvider>

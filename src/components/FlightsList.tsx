@@ -12,9 +12,9 @@ export default function FlightsList({
   filters: FlightFilters;
   search?: FlightSearch;
 }) {
-  const [sortBy, setSortBy] = useState<
-    "recommended" | "fastest" | "cheapest"
-  >();
+  const [sortBy, setSortBy] = useState<"recommended" | "fastest" | "cheapest">(
+    "recommended",
+  );
 
   const timeToMinutes = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
@@ -30,6 +30,31 @@ export default function FlightsList({
   const processedFlights = useMemo(() => {
     let result = [...flights];
 
+    if (filters) {
+      result = result.filter((flight) => {
+        const stopsMatch =
+          filters.stops.length === 0 || filters.stops.includes(flight.stops);
+
+        const airlineFilterMatch =
+          filters.airlines.length === 0 ||
+          filters.airlines.includes(flight.airline);
+
+        const departureMinutes = timeToMinutes(flight.departure);
+        const arrivalMinutes = timeToMinutes(flight.arrival);
+
+        const departureMatch =
+          departureMinutes >= filters.departureTimeRange[0] &&
+          departureMinutes <= filters.departureTimeRange[1];
+
+        const arrivalMatch =
+          arrivalMinutes >= filters.arrivalTimeRange[0] &&
+          arrivalMinutes <= filters.arrivalTimeRange[1];
+
+        return (
+          stopsMatch && airlineFilterMatch && departureMatch && arrivalMatch
+        );
+      });
+    }
     if (search) {
       result = result.filter((flight) => {
         const fromMatch =
@@ -60,47 +85,19 @@ export default function FlightsList({
         );
       });
     }
+    if (sortBy) {
+      result = result.sort((a, b) => {
+        if (sortBy === "fastest") {
+          return parseDuration(a.duration) - parseDuration(b.duration);
+        }
 
-    if (filters) {
-      result = result.filter((flight) => {
-        const stopsMatch =
-          filters.stops.length === 0 || filters.stops.includes(flight.stops);
+        if (sortBy === "cheapest") {
+          return a.price - b.price;
+        }
 
-        const airlineFilterMatch =
-          filters.airlines.length === 0 ||
-          filters.airlines.includes(flight.airline);
-
-        const departureMinutes = timeToMinutes(flight.departure);
-        const arrivalMinutes = timeToMinutes(flight.arrival);
-
-        const departureMatch =
-          departureMinutes >= filters.departureTimeRange[0] &&
-          departureMinutes <= filters.departureTimeRange[1];
-
-        const arrivalMatch =
-          arrivalMinutes >= filters.arrivalTimeRange[0] &&
-          arrivalMinutes <= filters.arrivalTimeRange[1];
-
-        return (
-          stopsMatch && airlineFilterMatch && departureMatch && arrivalMatch
-        );
+        return result.indexOf(a) - result.indexOf(b);
       });
     }
-
-    result.sort((a, b) => {
-      if (sortBy === "fastest") {
-        return parseDuration(a.duration) - parseDuration(b.duration);
-      }
-
-      if (sortBy === "cheapest") {
-        return a.price - b.price;
-      }
-
-      const aScore = a.price + parseDuration(a.duration);
-      const bScore = b.price + parseDuration(b.duration);
-
-      return aScore - bScore;
-    });
 
     return result;
   }, [filters, search, sortBy]);

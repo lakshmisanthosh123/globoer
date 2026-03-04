@@ -8,6 +8,7 @@ import FlightsList from "@/components/FlightsList";
 import RightSidebar from "@/components/RightSidebar";
 import SearchBar from "@/components/SearchBar";
 import Footer from "@/components/Footer";
+import { styled } from "@mui/material/styles";
 import { FlightSearch, FlightFilters } from "@/data/flights";
 export default function Home() {
   const [filters, setFilters] = useState<FlightFilters>({
@@ -30,21 +31,28 @@ export default function Home() {
   const handleSearch = (data: FlightSearch) => {
     setSearchData(data);
   };
-
+  // const Wrapper = styled(Box)({
+  //   display: "flex",
+  //   justifyContent: "center",
+  //   padding: "20px 40px",
+  //   borderBottom: "1px solid #eee",
+  // });
   return (
     <>
-      <Header />
+      <div>
+        <Header />
 
-      <SearchBar search={searchData} onSearch={handleSearch} />
+        <SearchBar search={searchData} onSearch={handleSearch} />
 
-      <Box
-        sx={{
-          maxWidth: "1400px",
-          margin: "0 auto",
-          padding: "32px 24px",
-        }}
-      >
-        <Box display="flex" alignItems="flex-start" gap={3}>
+        <Box
+          gap={3}
+          sx={{
+            display: "flex",
+            gap: 2,
+            mb: 2,
+            padding: "32px 24px",
+          }}
+        >
           <Box sx={{ width: 300, flexShrink: 0 }}>
             <FiltersSidebar filters={filters} onFilterChange={setFilters} />
           </Box>
@@ -57,8 +65,9 @@ export default function Home() {
             <RightSidebar />
           </Box>
         </Box>
-      </Box>
-      <Footer />
+
+        <Footer />
+      </div>
     </>
   );
 }
