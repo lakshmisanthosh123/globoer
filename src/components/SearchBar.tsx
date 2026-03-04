@@ -84,14 +84,14 @@ export default function SearchBar({ onSearch }: Props) {
   };
   const handleResetSearch = () => {
     onSearch({
-      from,
-      to,
-      departure: departure ? departure.format("YYYY-MM-DD") : null,
-      returnDate: returnDate ? returnDate.format("YYYY-MM-DD") : null,
-      travellers,
-      tripType,
-      flightClass,
-      airlines,
+      from: "",
+      to: "",
+      departure: "",
+      returnDate: "",
+      travellers: 0,
+      tripType: "",
+      flightClass: "",
+      airlines: "",
     });
   };
   const airline = Array.from(new Set(flights.map((f) => f.airline)));

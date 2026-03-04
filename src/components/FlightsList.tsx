@@ -29,7 +29,7 @@ export default function FlightsList({
 
   const processedFlights = useMemo(() => {
     let result = [...flights];
-
+    console.log(search, filters);
     if (filters) {
       result = result.filter((flight) => {
         const stopsMatch =
@@ -55,28 +55,28 @@ export default function FlightsList({
         );
       });
     }
-    if (search) {
+    if (search?.airlines !== "ALL") {
       result = result.filter((flight) => {
         const fromMatch =
-          !search.from ||
+          !search?.from ||
           flight.from.toLowerCase().includes(search.from.toLowerCase());
 
         const toMatch =
-          !search.to ||
+          !search?.to ||
           flight.to.toLowerCase().includes(search.to.toLowerCase());
 
         const tripTypeMatch =
-          !search.tripType ||
+          !search?.tripType ||
           search.tripType === "ALL" ||
           search.tripType === flight.tripType;
 
         const airlineMatch =
-          !search.airlines ||
+          !search?.airlines ||
           search.airlines === "ALL" ||
           search.airlines === flight.airline;
 
         const classMatch =
-          !search.flightClass ||
+          !search?.flightClass ||
           search.flightClass === "ALL" ||
           search.flightClass === flight.flightClass;
 
@@ -84,6 +84,9 @@ export default function FlightsList({
           fromMatch && toMatch && tripTypeMatch && airlineMatch && classMatch
         );
       });
+    }
+    if (search?.airlines === "ALL" && !filters) {
+      result = [...flights];
     }
     if (sortBy) {
       result = result.sort((a, b) => {

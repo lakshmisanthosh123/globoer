@@ -31,15 +31,10 @@ export default function Home() {
   const handleSearch = (data: FlightSearch) => {
     setSearchData(data);
   };
-  // const Wrapper = styled(Box)({
-  //   display: "flex",
-  //   justifyContent: "center",
-  //   padding: "20px 40px",
-  //   borderBottom: "1px solid #eee",
-  // });
+
   return (
     <>
-      <div>
+      <div style={{ width: "100%", maxWidth: "100vw" }}>
         <Header />
 
         <SearchBar search={searchData} onSearch={handleSearch} />
